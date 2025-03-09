@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKTCSS Variable Message Sign Controller</title>
+    <style>
+        @font-face {
+            font-family: 'VCR_OSD_MONO';
+            src: url('VCR_OSD_MONO_1.001.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: '華康中明體';
+            src: url('華康中明體.ttc') format('truetype');
+        }
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .input-container {
+            margin: 20px;
+            margin-top: 50px; /* Adjust spacing as needed */
+        }
+        .display-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-top: 20px;
+            position: relative;
+        }
+        .display-container::before {
+            content: ""; /* Required for pseudo-elements */
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            
+            background-image: url('fvms_mask2x2.png'); /* Change filename */
+            background-repeat: repeat;
+            background-size: auto; /* Adjust as needed */
+            background-position: center;
+            
+            pointer-events: none; /* Ensures text inputs remain interactive */
+        }
+        .light {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: orange;
+            margin: 0 20px; /* Maintain spacing */
+            position: absolute;
+            top: 50%; /* Move to the middle */
+            transform: translateY(-50%); /* Adjust to center */
+        }
+        .left-light {
+            animation: flash-left 1s infinite;
+            left: 0; /* Position at the left */
+        }
+        .right-light {
+            animation: flash-right 1s infinite;
+            right: 0; /* Position at the right */
+        }
+        @keyframes flash-left {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+        @keyframes flash-right {
+            0%, 49% { opacity: 0; }
+            50%, 100% { opacity: 1; }
+        }
+        /* Non-LED style wigwag 
+        @keyframes flash-left {
+            0% { opacity: 1; }
+            50% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+        @keyframes flash-right {
+            0% { opacity: 0; }
+            50% { opacity: 1; }
+            100% { opacity: 0; }
+        }*/
+        .text-display {
+            font-size: 32px;
+            font-weight: normal;
+            color: orange;
+            font-family: 'VCR_OSD_MONO', sans-serif;
+            white-space: pre-line;
+            text-align: centre;
+            /* Force pixelated rendering */
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+        .text1, .text2, .text3 {
+            font-family: 'VCR_OSD_MONO', sans-serif;
+            font-size: 25px;
+            letter-spacing: 2px;
+        }
+        .text4 {
+            font-family: '華康中明體', sans-serif;  /* Use Transport font */
+            font-size: 32px;
+            letter-spacing: 3px;
+            margin-top: 5px; /* Adjust this value as needed */
+        }
+        .pictogram {
+            width: 50px;
+            height: 50px;
+            margin: 0 10px;
+            align-self: flex-start;
+        }
+        .pictogram1 {
+            margin-right: 100px;  /* Add 50px spacing between left pictogram and text */
+        }
+
+        .pictogram2 {
+            margin-left: 100px;  /* Add 50px spacing between right pictogram and text */
+        }
+        input {
+            background-color: #555555; /* Set input field background to dark gray */
+            color: white; /* Ensure text is visible */
+            border: 1px solid #777777; /* Optional: Adjust border color for better contrast */
+            padding: 5px; /* Optional: Adds spacing inside the input box */
+        }
+    </style>
+</head>
+<body>
+    <div class="display-container">
+        <div class="light left-light"></div>
+        <img id="pictogram1" class="pictogram" src="" alt="">
+        <div id="output" class="text-display"></div>
+        <img id="pictogram2" class="pictogram" src="" alt="">
+        <div class="light right-light"></div>
+    </div>
+    <div class="input-container">
+        <!-- Text input for user -->
+        <input type="text" id="box1" placeholder="英文1 限24字">
+        <input type="text" id="box2" placeholder="英文2 限24字">
+        <input type="text" id="box3" placeholder="英文3 限24字">
+        <input type="text" id="box4" placeholder="中文 限12字">
+        <!-- Dropdown for selecting pictogram -->
+        <select id="pictogram-select">
+            <option value="picto1.png">1</option>
+            <option value="picto2.png">2</option>
+            <option value="picto3.png">3</option>
+        </select>
+        <!-- Button -->
+        <button onclick="generateText()">Generate</button>
+    </div>
+    <script>
+        function generateText() {
+            let text1 = document.getElementById("box1").value;
+            let text2 = document.getElementById("box2").value;
+            let text3 = document.getElementById("box3").value;
+            let text4 = document.getElementById("box4").value;
+            let selectedPicto = document.getElementById("pictogram-select").value;
+            // Add different classes for different font sizes
+            let outputText = '';
+            // Add text with appropriate classes
+            outputText += `<div class="text1">${text1}</div>`;
+            outputText += `<div class="text2">${text2}</div>`;
+            outputText += `<div class="text3">${text3}</div>`;
+            outputText += `<div class="text4">${text4}</div>`;
+            // Set output text
+            document.getElementById("output").innerHTML = outputText;
+            // Set selected pictogram for both image elements
+            document.getElementById("pictogram1").src = selectedPicto;
+            document.getElementById("pictogram2").src = selectedPicto;
+        }
+            // Function to set the default pictogram when the page loads
+            window.onload = function() {
+                let defaultPicto = document.getElementById("pictogram-select").value; // Get the default selected option
+                document.getElementById("pictogram1").src = defaultPicto;
+                document.getElementById("pictogram2").src = defaultPicto;
+            };
+    </script>
+</body>
+</html>
