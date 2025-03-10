@@ -1,6 +1,327 @@
 <!DOCTYPE html>
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HKTCSS Variable Message Sign Controller</title>
+    <style>
+        @font-face {
+            font-family: 'VCR_OSD_MONO';
+            src: url('VCR_OSD_MONO_1.001.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: '華康中明體';
+            src: url('華康中明體.ttc') format('truetype');
+        }
+        body {
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .input-container {
+            margin: 20px;
+            margin-top: 50px;
+            text-align: left;
+            display: inline-block;
+        }
+        .input-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .display-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-top: 20px;
+            position: relative;
+        }
+        .display-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('fvms_mask2x2.png');
+            background-repeat: repeat;
+            background-size: auto;
+            background-position: center;
+            pointer-events: none;
+            z-index: 2; /* Ensures it appears above other elements */
+        }
+        .text-display {
+            font-size: 32px;
+            color: orange;
+            font-family: 'VCR_OSD_MONO', sans-serif;
+            white-space: pre-line;
+            text-align: center;
+            image-rendering: pixelated;
+        }
+        .text1, .text2, .text3 {
+            font-family: 'VCR_OSD_MONO', sans-serif;
+            font-size: 25px;
+            letter-spacing: 2px;
+            height: 25px; /* Fixed height */
+            line-height: 25px; /* Ensures proper vertical alignment */
+        }
+        .text4 {
+            font-family: '華康中明體', sans-serif;
+            font-size: 32px;
+            letter-spacing: 3px;
+            margin-top: 5px;
+            height: 32px; /* Fixed height */
+            line-height: 32px;
+        }
+        .pictogram {
+            width: 50px;
+            height: 50px;
+            margin: 10px;
+            position: absolute; /* Ensure it floats above the text display */
+            top: 25%; /* Align vertically 貼上d with the lights */
+            transform: translateY(-50%); /* Center the pictogram */
+            z-index: 1; /* Ensures pictograms stay below the mask */
+        }
+        .pictogram-left {
+            left: 40px; /* Make absolute pictogram location ah. Adjust distance from left light */
+        }
+        .pictogram-right {
+            right: 40px; /* Make absolute pictogram location ah. Adjust distance from right light */
+        }
+        input, select {
+            width: 100%;
+            max-width: 300px;
+            padding: 5px;
+            background-color: #555555;
+            color: white;
+            border: 1px solid #777777;
+            margin-top: 5px;
+            display: block;
+        }
+        button {
+            background-color: orange;
+            color: black;
+            border: none;
+            padding: 8px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            display: block;
+        }
+        #instructions {
+            font-size: 10px;
+            font-weight: normal; /* Ensures it's not bold */
+            margin-top: 10px; /* Adds space below the button */
+            width: 300px;
+        }
+        /* WIGWAG LIGHT STYLES */
+        /* Common styles for lights */
+        .light {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: orange;
+            position: absolute;
+        }
+        /* Positions */
+        .center { top: 50%; transform: translateY(-50%); }
+        .top { top: 5%; }
+        .bottom { bottom: 5%; }
+        
+        .left-light { left: 0; }
+        .right-light { right: 0; }
+        
+        /* Flashing Animations */
+        @keyframes flash-left {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+        
+        @keyframes flash-right {
+            0%, 49% { opacity: 0; }
+            50%, 100% { opacity: 1; }
+        }
+        /* Option4*/
+        @keyframes flash-staggered-top {
+            0%, 49% { opacity: 1; }  /* ON */
+            50%, 100% { opacity: 0; } /* OFF */
+        }
+        @keyframes flash-staggered-bottom {
+            0%, 49% { opacity: 0; }  /* OFF */
+            50%, 100% { opacity: 1; } /* ON */
+        }
+       /* END OF WIGWAG LIGHT STYLES */
+    </style>
+</head>
 <body>
+    <div class="display-container">
+    <!-- Lights --><!-- Lights --><!-- Lights --><!-- Lights --><!-- Lights -->
+    <div class="light left-light center"></div>
+    <div class="light right-light center"></div>
+    
+    <div class="light left-light top"></div>
+    <div class="light right-light top"></div>
+    
+    <div class="light left-light bottom"></div>
+    <div class="light right-light bottom"></div>
 
+    <img id="pictogram1" class="pictogram pictogram-left" src="" alt="">
+    <div id="output" class="text-display"></div>
+    <img id="pictogram2" class="pictogram pictogram-right" src="" alt="">
+    </div>
+    
+    <div class="input-container">
+        <!-- Text input title -->
+        <span class="input-title">輸入或修改文字:</span>
+        <div class="input-group">
+            <input type="text" id="box1" placeholder="英文1 限32字">
+        </div>
+        <div class="input-group">
+            <input type="text" id="box2" placeholder="英文2 限32字">
+        </div>
+        <div class="input-group">
+            <input type="text" id="box3" placeholder="英文3 限32字">
+        </div>
+        <div class="input-group">
+            <input type="text" id="box4" placeholder="中文 限12字">
+        </div>
+
+        <!-- Message Library title -->
+        <span class="input-title">可選擇訊息:</span>
+        <div class="input-group">
+            <select id="message-library">
+                <option value="">請選擇</option>
+                <option value="INCIDENT|AHEAD|ROAD CLOSED|事故 前面道路封閉">1 事故分類 - 事故 前面道路封閉</option>
+            </select>
+        </div>
+        <button onclick="applyMessage()">選用文字</button>
+        <span class="input-title"></span>
+        <span class="input-title">圖案:</span>
+        <!-- Pictogram selection -->
+        <div class="input-group">
+            <select id="pictogram-select">
+                <option value="pictogram/000.png">000 - 空白</option>
+                <option value="pictogram/001.png">001 - 限制50</option>
+                <option value="pictogram/002.png">002 - 限制80</option>
+                <option value="pictogram/003.png">003 - 限制100</option>
+                <option value="pictogram/101.png">101 - 注意</option>
+            </select>
+        </div>
+        <!-- Flashing Light Options --><!-- Flashing Light Options --><!-- Flashing Light Options --><!-- Flashing Light Options -->
+        <span class="input-title">閃燈設定:</span>
+        <div class="input-group">
+            <select id="light-options">
+                <option value="none">閃燈關</option>
+                <option value="single">兩燈</option>
+                <option value="double">四燈：左右向（中環灣仔、獅隧等）</option>
+                <option value="staggered">四燈：上下向（香港仔）</option>
+            </select>
+        </div>
+
+        <button onclick="generateText()">Generate</button>
+        <p id="instructions">《使用指南》</p>
+        <p id="instructions">（1）可手動輸入文字、或由選單選擇再按「選用文字」</p>
+        <p id="instructions">（2）選擇合適之圖案（Pictogram）</p>
+        <p id="instructions">（3）選擇閃燈樣式</p>
+        <p id="instructions">「Generate!」</p>
+        <p id="instructions">* 建議使用iPhone Safari，打側部機以進入全螢幕顯示網頁，再放大或縮細頁面，可配合1／76模型使用。Enjoy! - M 2025</p>
+        <p id="instructions">可變信息顯示屏（Fully Variable Message Sign, FVMS）常見於策略性道路（SRN），用以提供道路資訊、交通消息及道路安全訊息。顯示屏由運輸署以及各隧道管制區交通管制及監察系統（TCSS）24小時控制。香港現時擁有TCSS的道路有各行車隧道、吐露港及粉嶺公路、青沙管制區、屯門公路、港珠澳大橋、中環及灣仔繞道、香園圍公路、屯門至赤鱲角連接路、深港西部通道、將軍澳-藍田隧道及將軍澳跨灣連接路、大埔公路沙田段擴闊工程、中九龍幹線及T2主幹路。各顯示屏規格不盡相同，如僅有兩行英文或三行英文、每行字數、圖案細節、閃燈數目等</p>
+    </div>
+
+    <script>
+        function generateText() {
+            let text1 = document.getElementById("box1").value;
+            let text2 = document.getElementById("box2").value;
+            let text3 = document.getElementById("box3").value;
+            let text4 = document.getElementById("box4").value;
+            let selectedPicto = document.getElementById("pictogram-select").value;
+
+            let outputText = '';
+            outputText += `<div class="text1">${text1}</div>`;
+            outputText += `<div class="text2">${text2}</div>`;
+            outputText += `<div class="text3">${text3}</div>`;
+            outputText += `<div class="text4">${text4}</div>`;
+
+            document.getElementById("output").innerHTML = outputText;
+            document.getElementById("pictogram1").src = selectedPicto;
+            document.getElementById("pictogram2").src = selectedPicto;
+        }
+
+        function applyMessage() {
+            let selectedMessage = document.getElementById("message-library").value;
+            if (selectedMessage) {
+                let messages = selectedMessage.split('|');
+                document.getElementById("box1").value = messages[0] || '';
+                document.getElementById("box2").value = messages[1] || '';
+                document.getElementById("box3").value = messages[2] || '';
+                document.getElementById("box4").value = messages[3] || '';
+            }
+        }
+        //Wigwag scripts starts
+        document.getElementById("light-options").addEventListener("change", function() {
+            const option = this.value;
+            
+            // Get all light elements
+            const centerLeftLights = document.querySelectorAll(".center.left-light");
+            const centerRightLights = document.querySelectorAll(".center.right-light");
+            const topLeftLights = document.querySelectorAll(".top.left-light");
+            const topRightLights = document.querySelectorAll(".top.right-light");
+            const bottomLeftLights = document.querySelectorAll(".bottom.left-light");
+            const bottomRightLights = document.querySelectorAll(".bottom.right-light");
+        
+            // Reset all lights
+            [...centerLeftLights, ...centerRightLights, ...topLeftLights, ...topRightLights, ...bottomLeftLights, ...bottomRightLights].forEach(light => {
+                light.style.display = "none";
+                light.style.animation = "";
+            });
+        
+            if (option === "single") {
+                // Option 2: One pair in the center (alternating)
+                centerLeftLights.forEach(light => light.style.display = "block");
+                centerRightLights.forEach(light => light.style.display = "block");
+        
+                centerLeftLights.forEach(light => light.style.animation = "flash-left 1s infinite");
+                centerRightLights.forEach(light => light.style.animation = "flash-right 1s infinite");
+            } else if (option === "double") {
+                // Option 3: Two pairs (top and bottom) flashing alternately
+                topLeftLights.forEach(light => light.style.display = "block");
+                topRightLights.forEach(light => light.style.display = "block");
+                bottomLeftLights.forEach(light => light.style.display = "block");
+                bottomRightLights.forEach(light => light.style.display = "block");
+        
+                topLeftLights.forEach(light => light.style.animation = "flash-left 1s infinite");
+                topRightLights.forEach(light => light.style.animation = "flash-right 1s infinite");
+                bottomLeftLights.forEach(light => light.style.animation = "flash-left 1s infinite");
+                bottomRightLights.forEach(light => light.style.animation = "flash-right 1s infinite");
+            } else if (option === "staggered") {
+                // Option 4: Alternating top & bottom lights
+                topLeftLights.forEach(light => light.style.display = "block");
+                topRightLights.forEach(light => light.style.display = "block");
+                bottomLeftLights.forEach(light => light.style.display = "block");
+                bottomRightLights.forEach(light => light.style.display = "block");
+            
+                topLeftLights.forEach(light => light.style.animation = "flash-staggered-top 1s infinite");
+                topRightLights.forEach(light => light.style.animation = "flash-staggered-top 1s infinite");
+                bottomLeftLights.forEach(light => light.style.animation = "flash-staggered-bottom 1s infinite");
+                bottomRightLights.forEach(light => light.style.animation = "flash-staggered-bottom 1s infinite");
+            }
+        });
+        
+        // Set default option
+        document.getElementById("light-options").value = "single";
+        document.getElementById("light-options").dispatchEvent(new Event("change"));
+        //Wigwag scripts ends
+        
+        window.onload = function() {
+            let defaultPicto = document.getElementById("pictogram-select").value;
+            document.getElementById("pictogram1").src = defaultPicto;
+            document.getElementById("pictogram2").src = defaultPicto;
+        };
+    </script>
 </body>
 </html>
