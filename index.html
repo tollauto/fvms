@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go！道路可變訊息控制器！v1.0</title>
+    <title>Go！道路可變訊息控制器！v1.1</title>
     <style>
         @font-face {
             font-family: 'VCR_OSD_MONO';
@@ -157,6 +157,25 @@
             50%, 100% { opacity: 1; } /* ON */
         }
        /* END OF WIGWAG LIGHT STYLES */
+          /* Input container styling */
+        #input-container-arrow {
+            margin-top: 20px;
+            text-align: center;
+        }
+        /* New display container */
+        /* New display container */
+        #display-container-arrow {
+            display: flex;
+            justify-content: space-between; /* Ensures equal spacing */
+            align-items: center;
+            width: 80%; /* Adjust as needed */
+            margin: 20px auto; /* Center the container */
+        }
+        /* Arrow images */
+        .arrow-img {
+            flex: 1; /* Ensures equal spacing */
+            max-width: 75px; /* Prevents excessive stretching */
+        }        
     </style>
 </head>
 <body>
@@ -174,6 +193,13 @@
     <img id="pictogram1" class="pictogram pictogram-left" src="" alt="">
     <div id="output" class="text-display"></div>
     <img id="pictogram2" class="pictogram pictogram-right" src="" alt="">
+    </div>
+    <!-- LCS Container -->
+    <div style="height: 30px;"></div>
+    <div id="display-container-arrow">
+        <img id="left-img" src="lcs/1.png" class="arrow-img">
+        <img id="center-img" src="lcs/1.png" class="arrow-img">
+        <img id="right-img" src="lcs/1.png" class="arrow-img">
     </div>
     
     <div class="input-container">
@@ -362,8 +388,36 @@
                 <option value="staggered">四燈：上下向（香港仔）</option>
             </select>
         </div>
-
         <button onclick="generateText()">Generate</button>
+        <!-- New input container -->
+        <div style="height: 20px;"></div>
+        <span class="input-title">Bonus: Lane Control Signal:</span>
+        <div id="input-container-arrow">
+            <label for="left-select">左線:</label>
+            <select id="left-select">
+                <option value="lcs/1.png">關</option>
+                <option value="lcs/2.png">綠箭</option>
+                <option value="lcs/3.gif">紅交叉</option>
+                <option value="lcs/4.gif">閃燈</option>
+            </select>
+        
+            <label for="center-select">中線:</label>
+            <select id="center-select">
+                <option value="lcs/1.png">關</option>
+                <option value="lcs/2.png">綠箭</option>
+                <option value="lcs/3.gif">紅交叉</option>
+                <option value="lcs/4.gif">閃燈</option>
+            </select>
+        
+            <label for="right-select">右線:</label>
+            <select id="right-select">
+                <option value="lcs/1.png">關</option>
+                <option value="lcs/2.png">綠箭</option>
+                <option value="lcs/3.gif">紅交叉</option>
+                <option value="lcs/4.gif">閃燈</option>
+            </select>
+        </div>
+        <div style="height: 20px;"></div>
         <p id="instructions">《使用指南》</p>
         <p id="instructions">（1）可手動輸入文字、或由選單選擇再按「選用文字」</p>
         <p id="instructions">（2）選擇合適之圖案（Pictogram）、選擇閃燈樣式</p>
@@ -375,7 +429,11 @@
         <p id="instructions">英文全寫為Fully Variable Message Sign（FVMS），常見於策略性道路（SRN），用以提供道路資訊、交通消息及道路安全訊息。顯示屏由運輸署以及各隧道管制區交通管制及監察系統（TCSS）24小時控制。香港現時擁有TCSS的道路有各行車隧道、吐露港及粉嶺公路、青沙管制區、屯門公路、港珠澳大橋、中環及灣仔繞道、香園圍公路、屯門至赤鱲角連接路、深港西部通道、將軍澳-藍田隧道及將軍澳跨灣連接路、大埔公路沙田段擴闊工程、中九龍幹線及T2主幹路。</p>
         <p id="instructions">因不同工程項目要求及技術轉變，各道路管制區之顯示屏規格並不盡相同，如英文行數、中英文字數限制、圖案細節、閃燈數目等。</p>
         <div style="height: 20px;"></div>
-        <p id="instructions">- Contact: angryusagi.road@gmail.com | 2025 -</p>
+        <p id="instructions">《更新紀錄》</p>
+        <p id="instructions">2025.3.11 - v1.1 加入Lane Control Signal (Beta)</p>
+        <p id="instructions">2025.3.10 - v1.0 Launch</p>
+        <div style="height: 20px;"></div>
+        <p id="instructions">Contact: angryusagi.road@gmail.com | 2025</p>
     </div>
 
     <script>
@@ -461,12 +519,24 @@
         document.getElementById("light-options").value = "single";
         document.getElementById("light-options").dispatchEvent(new Event("change"));
         //Wigwag scripts ends
+        //LCS scripts
+        document.getElementById("left-select").addEventListener("change", function () {
+            document.getElementById("left-img").src = this.value;
+        });
+        document.getElementById("center-select").addEventListener("change", function () {
+            document.getElementById("center-img").src = this.value;
+        });
+        document.getElementById("right-select").addEventListener("change", function () {
+            document.getElementById("right-img").src = this.value;
+        });
+        //LCS scripts ends
         
         window.onload = function() {
             let defaultPicto = document.getElementById("pictogram-select").value;
             document.getElementById("pictogram1").src = defaultPicto;
             document.getElementById("pictogram2").src = defaultPicto;
         };
+      
     </script>
 </body>
 </html>
