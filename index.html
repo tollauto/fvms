@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go！道路可變訊息控制器！v1.11</title>
+    <title>Go！道路可變訊息控制器！v1.12</title>
     <style>
         @font-face {
             font-family: 'VCR_OSD_MONO';
@@ -303,6 +303,7 @@
                 <option value="CENTRAL-WAN CHAI BYPASS|WESTERN DISTRICT|CONNECTION ROAD OPENED|繞道西區連接路開通">中環灣仔繞道 - 繞道西區連接路開通(無picto) </option>
                 <option value="PAY ATTENTION TO TRAFFIC|ROAD CONDITION|DRIVE WITH CARE & PATIENCE|留意道路情況, 小心忍讓">中環灣仔繞道 - 留意道路情況, 小心忍讓(無picto) </option>
                 <option value="WAN CHAI ENTRANCE|CLOSED||灣仔入口封閉">中環灣仔繞道 - 灣仔入口封閉(隧道封閉picto) </option>
+                <option value="CAR PARKS FULL|IN TUNG CHUNG||東涌車位已滿">屯赤隧道 - 東涌車位已滿 2020</option>
                 <option value="ROAD CLOSED|TUEN MUN VIA|LANTAU HIGHWAY|道路封閉：經大嶼山往屯門">屯赤隧道 - 道路封閉：經大嶼山往屯門</option>
                 <option value="TUNNEL CLOSED|TUEN MUN VIA|LANTAU HIGHWAY|隧道封閉：經大嶼山往屯門">屯赤隧道 - 隧道封閉：經大嶼山往屯門</option>
                 <option value="TUEN MUN ROAD|TRAFFIC CONGESTION||屯門公路 交通擠塞">屯門公路 - 屯門公路 交通擠塞</option>
@@ -342,6 +343,8 @@
                 <option value="HONG KONG PORT|CLOSED|DIVERT|香港口岸封閉，請改道">港珠澳香港連接路 - 香港口岸封閉，請改道</option>
                 <option value="HZMB |OFFICIALLY|OPENED|港珠澳大橋正式開通">港珠澳香港連接路 - 港珠澳大橋正式開通</option>
                 <option value="PASSENGER DROP-OFF|DRIVE TO PASSENGER|CLEARANCE BUILDING|落客請往旅檢大樓">港珠澳香港連接路 - 落客請往旅檢大樓</option>
+                <option value="BOUNDARY CROSSING|GOODS-KEEP LEFT|OTHERS-KEEP RIGHT|過境－貨檢靠左 客檢靠右">深港西部通道 - 過境－貨檢靠左 客檢靠右</option>   
+                <option value="LUNAR NEW YEAR|CROSS-BOUNDARY|TRAFFIC SCHEME|留意農曆新年跨境交通安排">深港西部通道 - 留意農曆新年跨境交通安排2024</option> 
                 <option value="Kln bound exit weekend|slow lane road works||週末獅隧九龍出口左線維修">獅子山隧道 - 週末獅隧九龍出口左線維修</option>
                 <option value="Kln bound tunnel tube|slow lane closed||往九龍管道慢線封閉">獅子山隧道 - 往九龍管道慢線封閉</option>
                 <option value="LION ROCK TUNNEL|ONE-TUBE-TWO-WAY||獅隧單管雙程行車">獅子山隧道 - 獅隧單管雙程行車(無picto) 2012</option>
@@ -398,6 +401,9 @@
             <select id="left-select">
                 <option value="lcs/1.png">關</option>
                 <option value="lcs/2.png">綠箭</option>
+                <option value="lcs/5.gif">綠箭閃</option>
+                <option value="lcs/6.gif">左斜</option>
+                <option value="lcs/7.gif">右斜</option>
                 <option value="lcs/3.gif">紅交叉</option>
                 <option value="lcs/4.gif">閃燈</option>
             </select>
@@ -406,6 +412,9 @@
             <select id="center-select">
                 <option value="lcs/1.png">關</option>
                 <option value="lcs/2.png">綠箭</option>
+                <option value="lcs/5.gif">綠箭閃</option>
+                <option value="lcs/6.gif">左斜</option>
+                <option value="lcs/7.gif">右斜</option>
                 <option value="lcs/3.gif">紅交叉</option>
                 <option value="lcs/4.gif">閃燈</option>
             </select>
@@ -414,6 +423,9 @@
             <select id="right-select">
                 <option value="lcs/1.png">關</option>
                 <option value="lcs/2.png">綠箭</option>
+                <option value="lcs/5.gif">綠箭閃</option>
+                <option value="lcs/6.gif">左斜</option>
+                <option value="lcs/7.gif">右斜</option>
                 <option value="lcs/3.gif">紅交叉</option>
                 <option value="lcs/4.gif">閃燈</option>
             </select>
