@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Go！道路可變訊息控制器！v1.15</title>
+    <style>
+        @font-face {
+            font-family: 'VCR_OSD_MONO';
+            src: url('VCR_OSD_MONO_1.001.ttf') format('truetype');
+        }
+        @font-face {
+            font-family: 'NotoSerifHK-Regular';
+            src: url('NotoSerifHK-Regular.ttf') format('truetype');
+        }
+        body {
+            padding-top: 100px;/* ADDED TO PUSH DOWN EVERYTHING */
+            background-color: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .input-container {
+            margin: 20px;
+            margin-top: 50px;
+            text-align: left;
+            display: inline-block;
+        }
+        .input-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            display: block;
+        }
+        .input-group {
+            margin-bottom: 10px;
+        }
+        .display-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-top: 20px;
+            position: relative;
+        }
+        .display-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('fvms_mask2x2.png');
+            background-repeat: repeat;
+            background-size: auto;
+            background-position: center;
+            pointer-events: none;
+            z-index: 2; /* Ensures it appears above other elements */
+        }
+        .text-display {
+            font-size: 32px;
+            color: orange;
+            font-family: 'VCR_OSD_MONO', sans-serif;
+            white-space: pre-line;
+            text-align: center;
+            image-rendering: pixelated;
+        }
+        .text1, .text2, .text3 {
+            font-family: 'VCR_OSD_MONO', sans-serif;
+            font-size: 25px;
+            letter-spacing: 2px;
+            height: 25px; /* Fixed height */
+            line-height: 25px; /* Ensures proper vertical alignment */
+        }
+        .text4 {
+            font-family: 'NotoSerifHK-Regular', sans-serif;
+            font-size: 32px;
+            letter-spacing: 3px;
+            margin-top: 5px;
+            height: 32px; /* Fixed height */
+            line-height: 32px;
+        }
+        .pictogram {
+            width: 50px;
+            height: 50px;
+            margin: 10px;
+            position: absolute; /* Ensure it floats above the text display */
+            top: 25%; /* Align vertically 貼上d with the lights */
+            transform: translateY(-50%); /* Center the pictogram */
+            z-index: 1; /* Ensures pictograms stay below the mask */
+        }
+        .pictogram-left {
+            left: 40px; /* Make absolute pictogram location ah. Adjust distance from left light */
+        }
+        .pictogram-right {
+            right: 40px; /* Make absolute pictogram location ah. Adjust distance from right light */
+        }
+        input, select {
+            width: 100%;
+            max-width: 300px;
+            padding: 5px;
+            background-color: #555555;
+            color: white;
+            border: 1px solid #777777;
+            margin-top: 5px;
+            display: block;
+        }
+        button {
+            background-color: orange;
+            color: black;
+            border: none;
+            padding: 8px 15px;
+            margin-top: 10px;
+            cursor: pointer;
+            display: block;
+        }
+        #instructions {
+            font-size: 10px;
+            font-weight: normal; /* Ensures it's not bold */
+            margin-top: 10px; /* Adds space below the button */
+            width: 300px;
+        }
+        /* WIGWAG LIGHT STYLES */
+        /* Common styles for lights */
+        .light {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: orange;
+            position: absolute;
+        }
+        /* Positions */
+        .center { top: 50%; transform: translateY(-50%); }
+        .top { top: 5%; }
+        .bottom { bottom: 5%; }
+        
+        .left-light { left: 0; }
+        .right-light { right: 0; }
+        
+        /* Flashing Animations */
+        @keyframes flash-left {
+            0%, 49% { opacity: 1; }
+            50%, 100% { opacity: 0; }
+        }
+        
+        @keyframes flash-right {
+            0%, 49% { opacity: 0; }
+            50%, 100% { opacity: 1; }
+        }
+        /* Option4*/
+        @keyframes flash-staggered-top {
+            0%, 49% { opacity: 1; }  /* ON */
+            50%, 100% { opacity: 0; } /* OFF */
+        }
+        @keyframes flash-staggered-bottom {
+            0%, 49% { opacity: 0; }  /* OFF */
+            50%, 100% { opacity: 1; } /* ON */
+        }
+       /* END OF WIGWAG LIGHT STYLES */
+          /* Input container styling */
+        #input-container-arrow {
+            margin-top: 20px;
+            text-align: left;
+        }
+        /* New display container */
+        /* New display container */
+        #display-container-arrow {
+            display: flex;
+            justify-content: space-between; /* Ensures equal spacing */
+            align-items: center;
+            width: 80%; /* Adjust as needed */
+            margin: 20px auto; /* Center the container */
+        }
+        /* Arrow images */
+        .arrow-img {
+            flex: 1; /* Ensures equal spacing */
+            max-width: 75px; /* Prevents excessive stretching */
+        }        
+    </style>
+</head>
+<body>
+    <div class="display-container">
+    <!-- Lights --><!-- Lights --><!-- Lights --><!-- Lights --><!-- Lights -->
+    <div class="light left-light center"></div>
+    <div class="light right-light center"></div>
+    
+    <div class="light left-light top"></div>
+    <div class="light right-light top"></div>
+    
+    <div class="light left-light bottom"></div>
+    <div class="light right-light bottom"></div>
+
+    <img id="pictogram1" class="pictogram pictogram-left" src="" alt="">
+    <div id="output" class="text-display"></div>
+    <img id="pictogram2" class="pictogram pictogram-right" src="" alt="">
+    </div>
+    <!-- LCS Container -->
+    <div style="height: 30px;"></div>
+    <div id="display-container-arrow">
+        <img id="left-img" src="lcs/1.png" class="arrow-img">
+        <img id="center-img" src="lcs/1.png" class="arrow-img">
+        <img id="right-img" src="lcs/1.png" class="arrow-img">
+    </div>
+    
+    <div class="input-container">
+        <!-- Text input title -->
+        <div style="height: 200px;"></div>
+        <span class="input-title">輸入或修改文字:</span>
+        <div class="input-group">
+            <input type="text" id="box1" placeholder="英文1 限32字">
+        </div>
+        <div class="input-group">
+            <input type="text" id="box2" placeholder="英文2 限32字">
+        </div>
+        <div class="input-group">
+            <input type="text" id="box3" placeholder="英文3 限32字">
+        </div>
+        <div class="input-group">
+            <input type="text" id="box4" placeholder="中文 限12字">
+        </div>
+
+        <!-- Message Library title -->
+        <span class="input-title">可選擇訊息:</span>
+        <div class="input-group">
+            <select id="message-library">
+                <option value="">請選擇</option>
+                <option value="INCIDENT|AHEAD|ROAD CLOSED|事故 前面道路封閉">1 事故分類 - 事故 前面道路封閉</option>
+                <option value="INCIDENT 3KM AHEAD|SLOW DOWN||前面三公里事故：請慢駛">1 事故分類 - 前面三公里事故：請慢駛</option>
+                <option value="INCIDENT AHEAD|MINOR DELAY||前面事故：輕微延誤">1 事故分類 - 前面事故：輕微延誤</option>
+                <option value="INCIDENT AHEAD|MAJOR DELAY||前面事故：嚴重延誤">1 事故分類 - 前面事故：嚴重延誤</option>
+                <option value="INCIDENT AHEAD|RIGHT LANE|BLOCKED|前面事故：右線阻塞">1 事故分類 - 前面事故：右線阻塞</option>
+                <option value="INCIDENT AHEAD|SLOW DOWN||事故：請慢駛">1 事故分類 - 事故：請慢駛</option>
+                <option value="INCIDENT AHEAD|FOLLOW SIGNS||前面事故：依路牌行車">1 事故分類 - 前面事故：依路牌行車 (斜箭picto)</option>
+                <option value="FOLLOW SIGNS|||請依路牌行車">1 事故分類 - 請依路牌行車 (斜箭picto)</option>
+                <option value="INCIDENT AHEAD|CONGESTED||前面事故 擠塞">1 事故分類 - 前面事故 擠塞</option>
+                <option value="INCIDENT AHEAD|DIVERT NOW||前面事故 即改道">1 事故分類 - 前面事故 即改道</option>
+                <option value="INCIDENT AHEAD|DRIVE CAREFULLY||前面事故 小心駕駛">1 事故分類 - 前面事故 小心駕駛</option>
+                <option value="INCIDENT AHEAD|SLOW DOWN||前面事故 減速">1 事故分類 - 前面事故 減速</option>
+                <option value="INCIDENT!|LEFT LANE|CLOSED|事故：左線封閉">1 事故分類 - 事故：左線封閉</option>
+                <option value="INCIDENT!|MIDDLE LANE|CLOSED|事故：中線封閉">1 事故分類 - 事故：中線封閉</option>
+                <option value="INCIDENT!|RIGHT & MIDDLE|LANES CLOSED|事故：右 及 中線封閉">1 事故分類 - 事故：右 及 中線封閉</option>
+                <option value="INCIDENT!|RIGHT & LEFT|LANES CLOSED|事故：右 及 左線封閉">1 事故分類 - 事故：右 及 左線封閉</option>
+                <option value="INCIDENT!|LEFT & MIDDLE|LANES CLOSED|事故：左 及 中線封閉">1 事故分類 - 事故：左 及 中線封閉</option>
+                <option value="OVERHEIGHT|PREPARE TO STOP||車輛超高，準備停車">1 事故分類 - 車輛超高，準備停車</option>
+                <option value="ROAD CLOSED|LAST EXIT 8A||道路封閉最後出口 8A">1 事故分類 - 道路封閉最後出口 8A</option>
+                <option value="TUNNEL CLOSED||TUNNEL CLOSED|隧道封閉">1 事故分類 - 隧道封閉</option>
+                <option value="ALL TRAFFIC|LEAVE AT|EXIT 9B|所有車輛於 9B 出口離開">2 擠塞及工程 - 所有車輛於 9B 出口離開</option>
+                <option value="CONGESTION|NEXT 3KM||以後三公里擠塞">2 擠塞及工程 - 以後三公里擠塞</option>
+                <option value="CONGESTION AHEAD|MINOR DELAY||前面擠塞：輕微延誤">2 擠塞及工程 - 前面擠塞：輕微延誤</option>
+                <option value="CONGESTION AHEAD|MAJOR DELAY||前面擠塞：嚴重延誤">2 擠塞及工程 - 前面擠塞：嚴重延誤</option>
+                <option value="CONGESTION AHEAD|PREPARE TO STOP||前面擠塞：請準備停車">2 擠塞及工程 - 前面擠塞：請準備停車</option>
+                <option value="DIVERSION|FOLLOW SIGNS||改道 依路牌行車">2 擠塞及工程 - 改道 依路牌行車</option>
+                <option value="DIVERSION|LEAVE AT|EXITS 1A OR 1B|在出口 1A 或 1B 改道">2 擠塞及工程 - 在出口 1A 或 1B 改道</option>
+                <option value="DIVERSION|LEAVE AT|EXITS 2|在出口 2 改道">2 擠塞及工程 - 在出口 2 改道</option>
+                <option value="DIVERSION|LEAVE AT|EXITS 3|改道 在出口 3 離開">2 擠塞及工程 - 改道 在出口 3 離開</option>
+                <option value="DIVERSION AHEAD|DRIVE WITH CARE||前面改道：小心駕駛">2 擠塞及工程 - 前面改道：小心駕駛</option>
+                <option value="TUNNEL CLOSED|USE|ALTERNATIVE ROUTE|隧道封閉：請改道">2 擠塞及工程 - 隧道封閉：請改道</option>
+                <option value="TUNNEL CLOSED|KEEP LEFT||隧道封閉：請靠左駛">2 擠塞及工程 - 隧道封閉：請靠左駛</option>
+                <option value="TUNNEL CLOSED|FOLLOW SIGNS||隧道封閉：依路牌行車">2 擠塞及工程 - 隧道封閉：依路牌行車</option>
+                <option value="TUNNEL SINGLE TUBE|CONTRAFLOW||單管雙程行車">2 擠塞及工程 - 單管雙程行車</option>
+                <option value="AMBER RAINSTORM|WARNING|DRIVE CAREFULLY|黃色暴雨警告：小心駕駛">3 天氣分類 - 黃色暴雨警告：小心駕駛</option>
+                <option value="BLACK RAINSTORM|WARNING|DRIVE CAREFULLY|黑色暴雨警告：小心駕駛">3 天氣分類 - 黑色暴雨警告：小心駕駛</option>
+                <option value="FOG|KEEP YOUR DISTANCE||大霧 保持安全距離">3 天氣分類 - 大霧 保持安全距離</option>
+                <option value="RED RAINSTORM|WARNING|DRIVE CAREFULLY|紅色暴雨警告：小心駕駛">3 天氣分類 - 紅色暴雨警告：小心駕駛</option>
+                <option value="STRONG WIND|SLOW DOWN||強風，請慢駛">3 天氣分類 - 強風，請慢駛</option>
+                <option value="STRONG WIND|MIDDLE LANE CLOSED|SLOW DOWN|強風，中線封閉，請慢駛">3 天氣分類 - 強風，中線封閉，請慢駛</option>
+                <option value="TYPHOON WARNING|SIGNAL NO.1|DRIVE WITH CARE|一號颱風警告：小心駕駛">3 天氣分類 - 一號颱風警告：小心駕駛</option>
+                <option value="TYPHOON WARNING|SIGNAL NO.3|DRIVE WITH CARE|三號颱風警告：小心駕駛">3 天氣分類 - 三號颱風警告：小心駕駛</option>
+                <option value="TYPHOON WARNING|SIGNAL NO.8|DRIVE WITH CARE|八號颱風警告：小心駕駛">3 天氣分類 - 八號颱風警告：小心駕駛</option>
+                <option value="TYPHOON WARNING|SIGNAL NO.9|DRIVE WITH CARE|九號颱風警告：小心駕駛">3 天氣分類 - 九號颱風警告：小心駕駛</option>
+                <option value="TYPHOON WARNING|SIGNAL NO.10|DRIVE WITH CARE|十號颱風警告：小心駕駛">3 天氣分類 - 十號颱風警告：小心駕駛</option>
+                <option value="24 HRS SPEED CAMERAS|||24 小時車速偵察">4 一般訊息 - 24 小時車速偵察</option>
+                <option value="BEWARE! SPEED LIMIT|CAN BE CHANGED|NO SPEEDING|留意可變車速限制切勿超速">4 一般訊息 - 留意可變車速限制切勿超速</option>
+                <option value="CHANGE LANE|CAREFULLY||切勿胡亂切線">4 一般訊息 - 切勿胡亂切線</option>
+                <option value="DO NOT USE|HANDHELD PHONE|WHILE DRIVING|駕駛時勿用手提電話">4 一般訊息 - 駕駛時勿用手提電話</option>
+                <option value="DRIVE CAREFULLY &|ARRIVE SAFELY||小心駕駛，安全抵達">4 一般訊息 - 小心駕駛，安全抵達</option>
+                <option value="DRIVE WITH CARE|||小心駕駛">4 一般訊息 - 小心駕駛</option>
+                <option value="GIVE WAY TO BUS|||請讓巴士">4 一般訊息 - 請讓巴士</option>
+                <option value="IF YOU DRINK,|DO NOT DRIVE||切勿酒後駕駛">4 一般訊息 - 切勿酒後駕駛</option>
+                <option value="IF YOU DRINK, DON'T DRIVE!|||切勿酒後駕駛">4 一般訊息 - 切勿酒後駕駛</option>
+                <option value="KEEP LEFT ON|EXPRESSWAY||快速公路 需靠左駛">4 一般訊息 - 快速公路 需靠左駛</option>
+                <option value="KEEP YOUR DISTANCE|||請勿緊隨前車">4 一般訊息 - 請勿緊隨前車</option>
+                <option value="OBEY LANE SIGNALS|||遵守行車線訊號">4 一般訊息 - 遵守行車線訊號</option>
+                <option value="OBSERVE SPEED LIMIT|||注意車速限制">4 一般訊息 - 注意車速限制</option>
+                <option value="OVERLOADING|CAUSES ACCIDENTS||超載易生意外">4 一般訊息 - 超載易生意外</option>
+                <option value="ROAD WORKS|DRIVE CAREFULLY||道路工程 小心駕駛">4 一般訊息 - 道路工程 小心駕駛</option>
+                <option value="SEAT BELTS|SAVE LIVES||安全帶可保障性命">4 一般訊息 - 安全帶可保障性命</option>
+                <option value="SLIPPERY ROAD|DRIVE CAREFULLY||路面濕滑，小心駕駛">4 一般訊息 - 路面濕滑，小心駕駛</option>
+                <option value="SLIPPERY ROAD !|DRIVE WITH CARE||路面濕滑！小心駕駛">4 一般訊息 - 路面濕滑！小心駕駛</option>
+                <option value="TAIL LIFT MUST BE|CLOSED PROPERLY||尾板必須摺合妥當">4 一般訊息 - 尾板必須摺合妥當</option>
+                <option value="TEST|||測試">4 一般訊息 - 測試</option>
+                <option value="TIREDNESS CAN KILL|||疲勞駕駛 易生意外">4 一般訊息 - 疲勞駕駛 易生意外</option>
+                <option value="TRAFFIC RESUMED NORMAL|||交通回復正常">4 一般訊息 - 交通回復正常</option>
+                <option value="TURN ON RADIO|||留意電台廣播">4 一般訊息 - 留意電台廣播</option>
+                <option value="USE DIPPED HEADLIGHT|||請用低燈">4 一般訊息 - 請用低燈</option>
+                <option value="USE HEADLAMPS|IN POOR VISIBILITY||能見度低時用大燈">4 一般訊息 - 能見度低時用大燈</option>
+                <option value="USE SEATBELTS|||繫安全帶">4 一般訊息 - 繫安全帶</option>
+                <option value="WATCH OUT PEDESTRIANS|NO SPEEDING||小心行人 切勿超速">4 一般訊息 - 小心行人 切勿超速</option>
+                <option value="ZERO ACCIDENTS|ON THE ROAD|HONG KONG'S GOAL|路上零意外 香港人人愛">4 一般訊息 - 路上零意外 香港人人愛</option>
+                <option value="|||切勿超速！">4 一般訊息 - 切勿超速！</option>
+                <option value="BYPASS W/B TO WANCHAI (N)|RD WORKS IN PROGRESS||繞道西行往灣北 工程中">中環灣仔繞道 - 繞道西行往灣北 工程中(無picto) </option>
+                <option value="BYPASS W/B TO WANCHAI (N)|RD WORKS DURING 10AM 4PM||繞道西行往灣北日間有工程">中環灣仔繞道 - 繞道西行往灣北日間有工程(無picto) </option>
+                <option value="CENTRAL-WAN CHAI BYPASS|WILL BE OPENED ON SATURDAY||中環灣仔繞道星期六開通">中環灣仔繞道 - 中環灣仔繞道星期六開通(無picto) 2019</option>
+                <option value="CENTRAL-WAN CHAI BYPASS|WESTERN DISTRICT|CONNECTION ROAD OPENED|繞道西區連接路開通">中環灣仔繞道 - 繞道西區連接路開通(無picto) </option>
+                <option value="PAY ATTENTION TO TRAFFIC|ROAD CONDITION|DRIVE WITH CARE & PATIENCE|留意道路情況, 小心忍讓">中環灣仔繞道 - 留意道路情況, 小心忍讓(無picto) </option>
+                <option value="WAN CHAI ENTRANCE|CLOSED||灣仔入口封閉">中環灣仔繞道 - 灣仔入口封閉(隧道封閉picto) </option>
+                <option value="CAR PARKS FULL|IN TUNG CHUNG||東涌車位已滿">屯赤隧道 - 東涌車位已滿 2020</option>
+                <option value="ROAD CLOSED|TUEN MUN VIA|LANTAU HIGHWAY|道路封閉：經大嶼山往屯門">屯赤隧道 - 道路封閉：經大嶼山往屯門</option>
+                <option value="TUNNEL CLOSED|TUEN MUN VIA|LANTAU HIGHWAY|隧道封閉：經大嶼山往屯門">屯赤隧道 - 隧道封閉：經大嶼山往屯門</option>
+                <option value="TUEN MUN ROAD|TRAFFIC CONGESTION||屯門公路 交通擠塞">屯門公路 - 屯門公路 交通擠塞</option>
+                <option value="FAN KAM ROAD|INCIDENT ONE-LANE|-TWO-WAY TRAFFIC|粉錦公路事故 單線雙程">吐露港粉嶺公路 - 粉錦公路事故 單線雙程(100 picto) 2018</option>
+                <option value="FANLING HIGHWAY NB NEAR|HONG LOK YUEN DIVERSION|20-09(FRI) 01:00-06:00|粉嶺公路北行周五凌晨改道">吐露港粉嶺公路 - 粉嶺公路北行周五凌晨改道(100 picto)</option>
+                <option value="ROADS BLOCKED AT|TAI PO AREA||大埔道路受阻">吐露港粉嶺公路 - 大埔道路受阻(100 picto) 2019</option>
+                <option value="|||出口 4 前 快 線 封閉">吐露港粉嶺公路 - 出口 4 前 快 線 封閉(100 picto)</option>
+                <option value="Community Chest|Route 8|Walk for Millions|公益金八號幹線百萬行">青沙管制區 - 公益金八號幹線百萬行2008</option>
+                <option value="EAGLE'S NEST TUNNEL |SINGLE TUBE|TRAFFIC|尖山隧道 單管道行車">青沙管制區 - 尖山隧道 單管道行車(單管雙程picto)</option>
+                <option value="MARATHON|WEST KOWLOON HIGHWAY|SOUTH BOUND IS CLOSED|西九龍公路南行因馬拉松封閉">青沙管制區 - 西九龍公路南行因馬拉松封閉(無picto) 2024</option>
+                <option value="ROAD CLOSURE IN|SHAM SHUI PO DISTRICT||深水土步區封路">青沙管制區 - 深水土步區封路(無picto) 2019</option>
+                <option value="SHA TIN HEIGHTS TUNNEL|SINGLE TUBE|TRAFFIC|沙田嶺隧道 單管道行車">青沙管制區 - 沙田嶺隧道 單管道行車</option>
+                <option value="STONECUTTERS|BRIDGE|CLOSED|昂船洲大橋 封閉">青沙管制區 - 昂船洲大橋 封閉</option>
+                <option value="Tai Po Road to Sha Tin|Traffic Congestion||大埔道往沙田交通擠塞">青沙管制區 - 大埔道往沙田交通擠塞2019</option>
+                <option value="TAI WAI TUNNEL|SINGLE TUBE|TRAFFIC|大圍隧道 單管道行車">青沙管制區 - 大圍隧道 單管道行車</option>
+                <option value="CHATHAM ROAD SOUTH|STH BOUND DIVERSION|ON 8 APR (SUNDAY)|週日凌晨漆咸道改道">青嶼幹線 - 週日凌晨漆咸道改道(no picto)</option>
+                <option value="CHEUNG TSING TUNNEL|INTERMITTENTLY CLOSED||長青隧道 間歇性封閉">青嶼幹線 - 長青隧道 間歇性封閉</option>
+                <option value="CYCLOTHON IN PROGRESS|LOWER DECK FOR KOWLOON||單車節往九龍用下層">青嶼幹線 - 單車節往九龍用下層(50 picto 封左中) 2024</option>
+                <option value="DANGER|PREPARE TO STOP||危險 準備停車">青嶼幹線 - 危險 準備停車</option>
+                <option value="LANTAU LINK BOTH UPPER|&/LOWER DECK OPEN||青嶼幹線上下層行車">青嶼幹線 - 青嶼幹線上下層行車(! picto)</option>
+                <option value="LANTAU LINK CLOSED|DIVERSION AHEAD||青嶼幹線封閉 請改道">青嶼幹線 - 青嶼幹線封閉 請改道(! picto)</option>
+                <option value="NO TOLL ON|LANTAU LINK FROM 27/12||青嶼27日起免繳費">青嶼幹線 - 青嶼27日起免繳費2020</option>
+                <option value="ROAD CLOSED IN MONGKOK|DUE TO PUBLIC EVENT||旺角區公眾活動封路">青嶼幹線 - 旺角區公眾活動封路(80 picto) 2019</option>
+                <option value="ROAD CYCLING RACE|NORTH LANTAU & DISNEYLAND|TRAFFIC CONTROL 24/11|周日北大嶼山交通管制">青嶼幹線 - 周日北大嶼山交通管制</option>
+                <option value="ROAD WORKS IN PROGRESS|LOWER DECK IS OPENED||上層有工程下層開放">青嶼幹線 - 上層有工程下層開放(80 picto) 2024</option>
+                <option value="TING KAU BRIDGE CLOSED|DIVERSION AHEAD||汀九橋封閉 請改道">青嶼幹線 - 汀九橋封閉 請改道(! picto)</option>
+                <option value="TO MA WAN|AUTHORIZED VEHICLES ONLY||馬灣祗限獲授權車輛">青嶼幹線 - 馬灣祗限獲授權車輛(80 picto)</option>
+                <option value="TSING KWAI HIGHWAY K/B|SPEED LIMIT 50KM/H||青葵公路限速五十">青嶼幹線 - 青葵公路限速五十(80 picto)</option>
+                <option value="TSING MA BRIDGE UPPER DECK|& TING KAU BRIDGE HIGH|SIDED VEHICLE PROHIBITED|青馬上層及汀九橋禁高身車">青嶼幹線 - 青馬上層及汀九橋禁高身車(白! picto)</option>
+                <option value="||LANE CLOSED|往汀九橋行車線封閉">青嶼幹線 - 往汀九橋行車線封閉</option>
+                <option value="Power Supply Test|In Progress|At S. M. Tunnels|城門隧道電力測試">城門隧道 - 城門隧道電力測試</option>
+                <option value="NIGHT HORSERACE|AT HAPPY VALLEY TONIGHT||跑馬地今晚有夜馬賽事">紅隧 - 跑馬地今晚有夜馬賽事</option>
+                <option value="ROADS IN CAUSEWAY BAY |CENTRAL BLOCKED||銅鑼灣中區一帶道路受阻">紅隧 - 銅鑼灣中區一帶道路受阻2019</option>
+                <option value="TRAFFIC CONGESTED AT|CHT BOTH SIDE BUS BAY||紅隧兩邊巴士站交通繁忙">紅隧 - 紅隧兩邊巴士站交通繁忙</option>
+                <option value="ABREDEEN TUNNEL|IMPLEMENTED HKETOLL||香隧已實施易通行">香港仔隧道 - 香隧已實施易通行</option>
+                <option value="ABT IMPLEMENTS|HKETOLL ON SUN 5AM||香隧周日早上實施易通行">香港仔隧道 - 香隧周日早上實施易通行2023</option>
+                <option value="ABT WILL BE CLOSED|AT 0400 - 0500||香隧即將臨時封閉">香港仔隧道 - 香隧即將臨時封閉2023</option>
+                <option value="SLOW TRAFFIC IN TUNNEL|PROCEED WITH CAUTION||隧道行車緩慢 小心駕駛">香港仔隧道 - 隧道行車緩慢 小心駕駛(無picto)</option>
+                <option value="TRAFFIC CONGESTION AT|TUNNEL EXIT||隧道出口一帶交通擠塞">香港仔隧道 - 隧道出口一帶交通擠塞(無picto)</option>
+                <option value="WANCHAI EXIT CONGESTED|VEH. QUEUE ON LEFT LANE||灣仔出口擠塞 慢線有車龍">香港仔隧道 - 灣仔出口擠塞 慢線有車龍(無picto)</option>
+                <option value="TUNNEL EXIT ROAD WORKS|DRIVE WITH CARE||隧道出口工程小心駕駛">啟德隧道 - 隧道出口工程小心駕駛(無picto)</option>
+                <option value="HIGH WIND|MANAGEMENT ON|HKZB-HKLR|港珠澳大橋實施强風管制">港珠澳香港連接路 - 港珠澳大橋實施強風管制</option>
+                <option value="HONG KONG PORT|CLOSED|DIVERT|香港口岸封閉，請改道">港珠澳香港連接路 - 香港口岸封閉，請改道</option>
+                <option value="HZMB |OFFICIALLY|OPENED|港珠澳大橋正式開通">港珠澳香港連接路 - 港珠澳大橋正式開通</option>
+                <option value="PASSENGER DROP-OFF|DRIVE TO PASSENGER|CLEARANCE BUILDING|落客請往旅檢大樓">港珠澳香港連接路 - 落客請往旅檢大樓</option>
+                <option value="BOUNDARY CROSSING|GOODS-KEEP LEFT|OTHERS-KEEP RIGHT|過境－貨檢靠左 客檢靠右">深港西部通道 - 過境－貨檢靠左 客檢靠右</option>   
+                <option value="LUNAR NEW YEAR|CROSS-BOUNDARY|TRAFFIC SCHEME|留意農曆新年跨境交通安排">深港西部通道 - 留意農曆新年跨境交通安排2024</option> 
+                <option value="Kln bound exit weekend|slow lane road works||週末獅隧九龍出口左線維修">獅子山隧道 - 週末獅隧九龍出口左線維修</option>
+                <option value="Kln bound tunnel tube|slow lane closed||往九龍管道慢線封閉">獅子山隧道 - 往九龍管道慢線封閉</option>
+                <option value="LION ROCK TUNNEL|ONE-TUBE-TWO-WAY||獅隧單管雙程行車">獅子山隧道 - 獅隧單管雙程行車(無picto) 2012</option>
+                <option value="MULTI-ZONE ROAD ARE BLO|PLEASE DRIVE CAREFULLY||多區道路受阻">獅子山隧道 - 多區道路受阻(無picto) 2019</option>
+                <option value="MULTI-ZONE ROAD ARE BLO|PLEASE DRIVE CAREFULLY||多區道路受阻">獅子山隧道 - 多區道路受阻2019</option>
+            </select>
+        </div>
+        <button onclick="applyMessage()">選用文字</button>
+        <span class="input-title"></span>
+        <span class="input-title">圖案:</span>
+        <!-- Pictogram selection -->
+        <div class="input-group">
+            <select id="pictogram-select">
+                <option value="pictogram/000.png">000 - 空白</option>
+                <option value="pictogram/001.png">001 - 限制50</option>
+                <option value="pictogram/002.png">002 - 限制80</option>
+                <option value="pictogram/003.png">003 - 限制100</option>
+                <option value="pictogram/101.png">101 - 注意</option>
+                <option value="pictogram/102.png">102 - 注意（白）</option>
+                <option value="pictogram/103.png">103 - 道路工程</option>
+                <option value="pictogram/104.png">104 - 天雨路滑</option>
+                <option value="pictogram/105.png">105 - 擠塞</option>
+                <option value="pictogram/106.png">106 - 事故</option>
+                <option value="pictogram/107.png">107 - 改道左（青馬）</option>
+                <option value="pictogram/108.png">108 - 改道右（青馬）</option>
+                <option value="pictogram/109.png">109 - 改道左</option>
+                <option value="pictogram/110.png">110 - 改道右</option>
+                <option value="pictogram/201.png">201 - 2線－右線封閉</option>
+                <option value="pictogram/202.png">202 - 2線－左線封閉</option>
+                <option value="pictogram/203.png">203 - 3線－右線封閉</option>
+                <option value="pictogram/204.png">204 - 3線－中線封閉</option>
+                <option value="pictogram/205.png">205 - 3線－左線封閉</option>
+                <option value="pictogram/206.png">206 - 3線－右中封閉</option>
+                <option value="pictogram/207.png">207 - 3線－左右封閉</option>
+                <option value="pictogram/208.png">208 - 3線－左中封閉</option>
+                <option value="pictogram/301.png">301 - 隧道封閉</option>
+                <option value="pictogram/302.png">302 - 單管雙程（左）</option>
+                <option value="pictogram/303.png">303 - 單管雙程（右）</option>
+                <option value="pictogram/888.png">888 - 公益金百萬行</option>
+            </select>
+        </div>
+        <!-- Flashing Light Options --><!-- Flashing Light Options --><!-- Flashing Light Options --><!-- Flashing Light Options -->
+        <span class="input-title">閃燈設定:</span>
+        <div class="input-group">
+            <select id="light-options">
+                <option value="none">閃燈關</option>
+                <option value="single">兩燈</option>
+                <option value="double">四燈：左右向（中環灣仔、獅隧、紅隧等）</option>
+                <option value="staggered">四燈：上下向（香港仔）</option>
+            </select>
+        </div>
+        <button onclick="generateText()">Generate</button>
+        <!-- New input container -->
+        <div style="height: 20px;"></div>
+        <span class="input-title">Bonus: Lane Control Signal:</span>
+        <div id="input-container-arrow">
+            <p id="instructions">左線:</p>
+            <select id="left-select">
+                <option value="lcs/1.png">關</option>
+                <option value="lcs/2.png">綠箭</option>
+                <option value="lcs/5.gif">綠箭閃</option>
+                <option value="lcs/6.gif">左斜</option>
+                <option value="lcs/7.gif">右斜</option>
+                <option value="lcs/3.gif">紅交叉</option>
+                <option value="lcs/4.gif">閃燈</option>
+            </select>
+        
+            <p id="instructions">中線:</p>
+            <select id="center-select">
+                <option value="lcs/1.png">關</option>
+                <option value="lcs/2.png">綠箭</option>
+                <option value="lcs/5.gif">綠箭閃</option>
+                <option value="lcs/6.gif">左斜</option>
+                <option value="lcs/7.gif">右斜</option>
+                <option value="lcs/3.gif">紅交叉</option>
+                <option value="lcs/4.gif">閃燈</option>
+            </select>
+        
+            <p id="instructions">右線:</p>
+            <select id="right-select">
+                <option value="lcs/1.png">關</option>
+                <option value="lcs/2.png">綠箭</option>
+                <option value="lcs/5.gif">綠箭閃</option>
+                <option value="lcs/6.gif">左斜</option>
+                <option value="lcs/7.gif">右斜</option>
+                <option value="lcs/3.gif">紅交叉</option>
+                <option value="lcs/4.gif">閃燈</option>
+            </select>
+        </div>
+        <div style="height: 20px;"></div>
+        <p id="instructions">《使用指南》</p>
+        <p id="instructions">（1）可手動輸入文字、或由選單選擇再按「選用文字」</p>
+        <p id="instructions">（2）選擇合適之圖案（Pictogram）、選擇閃燈樣式</p>
+        <p id="instructions">（3）「Generate!」</p>
+        <p id="instructions">* 如配合1/64或1/76模型遊玩，建議使用iPhone Safari，再打側電話本身以進入全螢幕顯示網頁，按需要用瀏覽器放大或縮細頁面，Enjoy！</p>
+        <p id="instructions">* 本網頁文字使用開源字型，繁體中文為NotoSerifHK-Regular、英文為VCR_OSD_MONO，用作商業用途前請查閱相關字型限制。本網頁與任何機構或部門並無關連。</p>
+        <div style="height: 20px;"></div>
+        <p id="instructions">《關於可變信息顯示屏》</p>
+        <p id="instructions">英文全寫為Fully Variable Message Sign（FVMS），常見於策略性道路（SRN），用以提供道路資訊、交通消息及道路安全訊息。顯示屏由運輸署以及各隧道管制區交通管制及監察系統（TCSS）24小時控制。香港現時擁有TCSS的道路有各行車隧道、吐露港及粉嶺公路、青沙管制區、屯門公路、港珠澳大橋、中環及灣仔繞道、香園圍公路、屯門至赤鱲角連接路、深港西部通道、將軍澳-藍田隧道及將軍澳跨灣連接路、大埔公路沙田段擴闊工程、中九龍幹線及T2主幹路。</p>
+        <p id="instructions">因不同工程項目要求及技術轉變，各道路管制區之顯示屏規格並不盡相同，如英文行數、中英文字數限制、圖案細節、閃燈數目等。</p>
+        <div style="height: 20px;"></div>
+        <p id="instructions">《更新紀錄》</p>
+        <p id="instructions">2025.3.11 - v1.1 加入Lane Control Signal (Beta)</p>
+        <p id="instructions">2025.3.10 - v1.0 Launch</p>
+        <div style="height: 20px;"></div>
+        <p id="instructions">Contact: angryusagi.road@gmail.com | 2025</p>
+    </div>
+
+    <script>
+        function generateText() {
+            let text1 = document.getElementById("box1").value;
+            let text2 = document.getElementById("box2").value;
+            let text3 = document.getElementById("box3").value;
+            let text4 = document.getElementById("box4").value;
+            let selectedPicto = document.getElementById("pictogram-select").value;
+
+            let outputText = '';
+            outputText += `<div class="text1">${text1}</div>`;
+            outputText += `<div class="text2">${text2}</div>`;
+            outputText += `<div class="text3">${text3}</div>`;
+            outputText += `<div class="text4">${text4}</div>`;
+
+            document.getElementById("output").innerHTML = outputText;
+            document.getElementById("pictogram1").src = selectedPicto;
+            document.getElementById("pictogram2").src = selectedPicto;
+        }
+
+        function applyMessage() {
+            let selectedMessage = document.getElementById("message-library").value;
+            if (selectedMessage) {
+                let messages = selectedMessage.split('|');
+                document.getElementById("box1").value = messages[0] || '';
+                document.getElementById("box2").value = messages[1] || '';
+                document.getElementById("box3").value = messages[2] || '';
+                document.getElementById("box4").value = messages[3] || '';
+            }
+        }
+        //Wigwag scripts starts
+        document.getElementById("light-options").addEventListener("change", function() {
+            const option = this.value;
+            
+            // Get all light elements
+            const centerLeftLights = document.querySelectorAll(".center.left-light");
+            const centerRightLights = document.querySelectorAll(".center.right-light");
+            const topLeftLights = document.querySelectorAll(".top.left-light");
+            const topRightLights = document.querySelectorAll(".top.right-light");
+            const bottomLeftLights = document.querySelectorAll(".bottom.left-light");
+            const bottomRightLights = document.querySelectorAll(".bottom.right-light");
+        
+            // Reset all lights
+            [...centerLeftLights, ...centerRightLights, ...topLeftLights, ...topRightLights, ...bottomLeftLights, ...bottomRightLights].forEach(light => {
+                light.style.display = "none";
+                light.style.animation = "";
+            });
+        
+            if (option === "single") {
+                // Option 2: One pair in the center (alternating)
+                centerLeftLights.forEach(light => light.style.display = "block");
+                centerRightLights.forEach(light => light.style.display = "block");
+        
+                centerLeftLights.forEach(light => light.style.animation = "flash-left 1s infinite");
+                centerRightLights.forEach(light => light.style.animation = "flash-right 1s infinite");
+            } else if (option === "double") {
+                // Option 3: Two pairs (top and bottom) flashing alternately
+                topLeftLights.forEach(light => light.style.display = "block");
+                topRightLights.forEach(light => light.style.display = "block");
+                bottomLeftLights.forEach(light => light.style.display = "block");
+                bottomRightLights.forEach(light => light.style.display = "block");
+        
+                topLeftLights.forEach(light => light.style.animation = "flash-left 1s infinite");
+                topRightLights.forEach(light => light.style.animation = "flash-right 1s infinite");
+                bottomLeftLights.forEach(light => light.style.animation = "flash-left 1s infinite");
+                bottomRightLights.forEach(light => light.style.animation = "flash-right 1s infinite");
+            } else if (option === "staggered") {
+                // Option 4: Alternating top & bottom lights
+                topLeftLights.forEach(light => light.style.display = "block");
+                topRightLights.forEach(light => light.style.display = "block");
+                bottomLeftLights.forEach(light => light.style.display = "block");
+                bottomRightLights.forEach(light => light.style.display = "block");
+            
+                topLeftLights.forEach(light => light.style.animation = "flash-staggered-top 1s infinite");
+                topRightLights.forEach(light => light.style.animation = "flash-staggered-top 1s infinite");
+                bottomLeftLights.forEach(light => light.style.animation = "flash-staggered-bottom 1s infinite");
+                bottomRightLights.forEach(light => light.style.animation = "flash-staggered-bottom 1s infinite");
+            }
+        });
+        
+        // Set default option
+        document.getElementById("light-options").value = "single";
+        document.getElementById("light-options").dispatchEvent(new Event("change"));
+        //Wigwag scripts ends
+        //LCS scripts
+        document.getElementById("left-select").addEventListener("change", function () {
+            document.getElementById("left-img").src = this.value;
+        });
+        document.getElementById("center-select").addEventListener("change", function () {
+            document.getElementById("center-img").src = this.value;
+        });
+        document.getElementById("right-select").addEventListener("change", function () {
+            document.getElementById("right-img").src = this.value;
+        });
+        //LCS scripts ends
+        
+        window.onload = function() {
+            let defaultPicto = document.getElementById("pictogram-select").value;
+            document.getElementById("pictogram1").src = defaultPicto;
+            document.getElementById("pictogram2").src = defaultPicto;
+        };
+      
+    </script>
+</body>
+</html>
