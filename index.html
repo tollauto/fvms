@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go！道路可變訊息控制器！v1.15</title>
+    <title>Go！道路可變訊息控制器！v1.16</title>
     <style>
         @font-face {
             font-family: 'VCR_OSD_MONO';
@@ -273,6 +273,7 @@
                 <option value="BEWARE! SPEED LIMIT|CAN BE CHANGED|NO SPEEDING|留意可變車速限制切勿超速">4 一般訊息 - 留意可變車速限制切勿超速</option>
                 <option value="CHANGE LANE|CAREFULLY||切勿胡亂切線">4 一般訊息 - 切勿胡亂切線</option>
                 <option value="DO NOT USE|HANDHELD PHONE|WHILE DRIVING|駕駛時勿用手提電話">4 一般訊息 - 駕駛時勿用手提電話</option>
+                <option value="DRIVE ATTENTIVELY|NO MOBILE PHONE||專注駕駛 勿用手機">4 一般訊息 - 專注駕駛 勿用手機(無picto)</option>
                 <option value="DRIVE CAREFULLY &|ARRIVE SAFELY||小心駕駛，安全抵達">4 一般訊息 - 小心駕駛，安全抵達</option>
                 <option value="DRIVE WITH CARE|||小心駕駛">4 一般訊息 - 小心駕駛</option>
                 <option value="GIVE WAY TO BUS|||請讓巴士">4 一般訊息 - 請讓巴士</option>
@@ -302,6 +303,7 @@
                 <option value="BYPASS W/B TO WANCHAI (N)|RD WORKS DURING 10AM 4PM||繞道西行往灣北日間有工程">中環灣仔繞道 - 繞道西行往灣北日間有工程(無picto) </option>
                 <option value="CENTRAL-WAN CHAI BYPASS|WILL BE OPENED ON SATURDAY||中環灣仔繞道星期六開通">中環灣仔繞道 - 中環灣仔繞道星期六開通(無picto) 2019</option>
                 <option value="CENTRAL-WAN CHAI BYPASS|WESTERN DISTRICT|CONNECTION ROAD OPENED|繞道西區連接路開通">中環灣仔繞道 - 繞道西區連接路開通(無picto) </option>
+                <option value="LANE MERGING AT|BYPASS NORTH POINT EXIT||繞道北角出口三線轉兩線">中環灣仔繞道 - 繞道北角出口三線轉兩線(無picto)</option>
                 <option value="PAY ATTENTION TO TRAFFIC|ROAD CONDITION|DRIVE WITH CARE & PATIENCE|留意道路情況, 小心忍讓">中環灣仔繞道 - 留意道路情況, 小心忍讓(無picto) </option>
                 <option value="WAN CHAI ENTRANCE|CLOSED||灣仔入口封閉">中環灣仔繞道 - 灣仔入口封閉(隧道封閉picto) </option>
                 <option value="CAR PARKS FULL|IN TUNG CHUNG||東涌車位已滿">屯赤隧道 - 東涌車位已滿 2020</option>
@@ -310,6 +312,7 @@
                 <option value="TUEN MUN ROAD|TRAFFIC CONGESTION||屯門公路 交通擠塞">屯門公路 - 屯門公路 交通擠塞</option>
                 <option value="FAN KAM ROAD|INCIDENT ONE-LANE|-TWO-WAY TRAFFIC|粉錦公路事故 單線雙程">吐露港粉嶺公路 - 粉錦公路事故 單線雙程(100 picto) 2018</option>
                 <option value="FANLING HIGHWAY NB NEAR|HONG LOK YUEN DIVERSION|20-09(FRI) 01:00-06:00|粉嶺公路北行周五凌晨改道">吐露港粉嶺公路 - 粉嶺公路北行周五凌晨改道(100 picto)</option>
+                <option value="HEUNG YUEN WAI HIGHWAY|TO BE|OPENED AT 08:00 TODAY|香園圍公路於今早八時開通">吐露港粉嶺公路 - 香園圍公路於今早八時開通(100 picto) 2020</option>
                 <option value="ROADS BLOCKED AT|TAI PO AREA||大埔道路受阻">吐露港粉嶺公路 - 大埔道路受阻(100 picto) 2019</option>
                 <option value="|||出口 4 前 快 線 封閉">吐露港粉嶺公路 - 出口 4 前 快 線 封閉(100 picto)</option>
                 <option value="Community Chest|Route 8|Walk for Millions|公益金八號幹線百萬行">青沙管制區 - 公益金八號幹線百萬行2008</option>
@@ -322,6 +325,7 @@
                 <option value="TAI WAI TUNNEL|SINGLE TUBE|TRAFFIC|大圍隧道 單管道行車">青沙管制區 - 大圍隧道 單管道行車</option>
                 <option value="CHATHAM ROAD SOUTH|STH BOUND DIVERSION|ON 8 APR (SUNDAY)|週日凌晨漆咸道改道">青嶼幹線 - 週日凌晨漆咸道改道(no picto)</option>
                 <option value="CHEUNG TSING TUNNEL|INTERMITTENTLY CLOSED||長青隧道 間歇性封閉">青嶼幹線 - 長青隧道 間歇性封閉</option>
+                <option value="DIVERSION AHEAD|KEEP LEFT EXCEPT CARS||改道靠左 細車除外">青嶼幹線 - 改道靠左 細車除外 (左斜 picto, 強風中線封閉)</option>
                 <option value="CYCLOTHON IN PROGRESS|LOWER DECK FOR KOWLOON||單車節往九龍用下層">青嶼幹線 - 單車節往九龍用下層(50 picto 封左中) 2024</option>
                 <option value="DANGER|PREPARE TO STOP||危險 準備停車">青嶼幹線 - 危險 準備停車</option>
                 <option value="LANTAU LINK BOTH UPPER|&/LOWER DECK OPEN||青嶼幹線上下層行車">青嶼幹線 - 青嶼幹線上下層行車(! picto)</option>
@@ -330,12 +334,14 @@
                 <option value="ROAD CLOSED IN MONGKOK|DUE TO PUBLIC EVENT||旺角區公眾活動封路">青嶼幹線 - 旺角區公眾活動封路(80 picto) 2019</option>
                 <option value="ROAD CYCLING RACE|NORTH LANTAU & DISNEYLAND|TRAFFIC CONTROL 24/11|周日北大嶼山交通管制">青嶼幹線 - 周日北大嶼山交通管制</option>
                 <option value="ROAD WORKS IN PROGRESS|LOWER DECK IS OPENED||上層有工程下層開放">青嶼幹線 - 上層有工程下層開放(80 picto) 2024</option>
+                <option value="SMART|MOTORWAY|UNDER TRIAL|智慧公路試行">青嶼幹線 - 智慧公路試行(80 picto) 2024</option>
                 <option value="TING KAU BRIDGE CLOSED|DIVERSION AHEAD||汀九橋封閉 請改道">青嶼幹線 - 汀九橋封閉 請改道(! picto)</option>
                 <option value="TO MA WAN|AUTHORIZED VEHICLES ONLY||馬灣祗限獲授權車輛">青嶼幹線 - 馬灣祗限獲授權車輛(80 picto)</option>
                 <option value="TSING KWAI HIGHWAY K/B|SPEED LIMIT 50KM/H||青葵公路限速五十">青嶼幹線 - 青葵公路限速五十(80 picto)</option>
                 <option value="TSING MA BRIDGE UPPER DECK|& TING KAU BRIDGE HIGH|SIDED VEHICLE PROHIBITED|青馬上層及汀九橋禁高身車">青嶼幹線 - 青馬上層及汀九橋禁高身車(白! picto)</option>
                 <option value="||LANE CLOSED|往汀九橋行車線封閉">青嶼幹線 - 往汀九橋行車線封閉</option>
                 <option value="Power Supply Test|In Progress|At S. M. Tunnels|城門隧道電力測試">城門隧道 - 城門隧道電力測試</option>
+                <option value="ISLAND EASTERN CORRIDOR|EASTBOUND CLOSED||街馬－東區走廊東行封閉">紅隧 - 街馬－東區走廊東行封閉2024</option>
                 <option value="NIGHT HORSERACE|AT HAPPY VALLEY TONIGHT||跑馬地今晚有夜馬賽事">紅隧 - 跑馬地今晚有夜馬賽事</option>
                 <option value="ROADS IN CAUSEWAY BAY |CENTRAL BLOCKED||銅鑼灣中區一帶道路受阻">紅隧 - 銅鑼灣中區一帶道路受阻2019</option>
                 <option value="TRAFFIC CONGESTED AT|CHT BOTH SIDE BUS BAY||紅隧兩邊巴士站交通繁忙">紅隧 - 紅隧兩邊巴士站交通繁忙</option>
