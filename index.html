@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go！道路可變訊息控制器！v1.21</title>
+    <title>Go！道路可變訊息控制器！v1.30</title>
     <style>
         @font-face {
             font-family: 'VCR_OSD_MONO';
@@ -376,7 +376,7 @@
                 <option value="Kln bound tunnel tube|slow lane closed||往九龍管道慢線封閉">獅子山隧道 - 往九龍管道慢線封閉</option>
                 <option value="LION ROCK TUNNEL|ONE-TUBE-TWO-WAY||獅隧單管雙程行車">獅子山隧道 - 獅隧單管雙程行車(無picto) 2012</option>
                 <option value="MULTI-ZONE ROAD ARE BLO|PLEASE DRIVE CAREFULLY||多區道路受阻">獅子山隧道 - 多區道路受阻(無picto) 2019</option>
-                <option value="WELCOME TO|CENTRAL KOWLOON BYPASS|(YAU MA TEI SECTION)|歡迎蒞臨中九龍繞道（油麻地段）">中九龍 - 歡迎蒞臨中九龍繞道(油麻地段) (Hwy logo) 2025</option>
+                <option value="WELCOME TO|CENTRAL KOWLOON BYPASS|(YAU MA TEI SECTION)|歡迎蒞臨中九龍繞道(油麻地段)">中九龍 - 歡迎蒞臨中九龍繞道(油麻地段) (Hwy logo) 2025</option>
                 <option value="2025 Legislative Council|General Election|Let’s Vote Together|2025立法會換屆選舉 齊投票">中九龍 - 立法會換屆選舉 齊投票 (Hwy logo) 2025</option>
             </select>
         </div>
@@ -425,6 +425,15 @@
                 <option value="staggered">四燈：上下向（香港仔）</option>
             </select>
         </div>
+        <!-- Text Color Setting v1.3 feature -->
+        <span class="input-title">文字顏色:</span>
+        <div class="input-group">
+            <select id="text-color-select">
+                <option value="orange">橙色（預設）</option>
+                <option value="white">白色</option>
+            </select>
+        </div>
+        <!-- Text Color Setting v1.3 feature -->
         <button onclick="generateText()">Generate</button>
         <!-- New input container -->
         <div style="height: 20px;"></div>
@@ -496,10 +505,16 @@
             outputText += `<div class="text2">${text2}</div>`;
             outputText += `<div class="text3">${text3}</div>`;
             outputText += `<div class="text4">${text4}</div>`;
-
+            // Insert HTML
             document.getElementById("output").innerHTML = outputText;
+            // Update pictograms
             document.getElementById("pictogram1").src = selectedPicto;
             document.getElementById("pictogram2").src = selectedPicto;
+            // Apply text color selection
+            let selectedColor = document.getElementById("text-color-select").value;
+            document.querySelectorAll('.text-display div').forEach(el => {
+                el.style.color = selectedColor;
+            });
         }
 
         function applyMessage() {
