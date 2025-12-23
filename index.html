@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go！道路可變訊息控制器！v1.30</title>
+    <title>Go！道路可變訊息控制器！v1.31</title>
     <style>
         @font-face {
             font-family: 'VCR_OSD_MONO';
@@ -332,6 +332,15 @@
                 <option value="STONECUTTERS|BRIDGE|CLOSED|昂船洲大橋 封閉">青沙管制區 - 昂船洲大橋 封閉</option>
                 <option value="Tai Po Road to Sha Tin|Traffic Congestion||大埔道往沙田交通擠塞">青沙管制區 - 大埔道往沙田交通擠塞2019</option>
                 <option value="TAI WAI TUNNEL|SINGLE TUBE|TRAFFIC|大圍隧道 單管道行車">青沙管制區 - 大圍隧道 單管道行車</option>
+                <option value="|TO LANTAU ISLAND |PAY ON RETURN TRIP|往大嶼山回程繳費">青嶼幹線 - 往大嶼山回程繳費 (2002年)</option>
+                <option value="|TO LANTAU |PAY ON RETURN TRIP|往大嶼山 回程繳費">青嶼幹線 - 往大嶼山 回程繳費 (2002年)</option>
+                <option value="|TING KAU BRIDGE|CONGESTION|汀九橋擠塞">青嶼幹線 - 汀九橋擠塞 (2002年)</option>
+                <option value="|TUEN MUN ROAD|TRAFFIC CONGESTED|屯門公路交通擠塞">青嶼幹線 - 屯門公路交通擠塞 (2002年)</option>
+                <option value="|TRAFFIC CONTROL AHEAD|DRIVE WITH CARE|前面交通管制小心駕駛">青嶼幹線 - 前面交通管制小心駕駛 (2002年)</option>
+                <option value="|TUNNEL SINGLE TUBE TRAFFIC||隧道現正單管道行車">青嶼幹線 - 隧道現正單管道行車 (2002年)</option>
+                <option value="|EAST KOWLOON CORRIDOR|CONGESTED|東九龍走廊擠塞">青嶼幹線 - 東九龍走廊擠塞 (2002年)</option>
+                <option value="|TAI LAM TUNNEL|SINGLE TUBE TRAFFIC|大欖隧道單管道行車">青嶼幹線 - 大欖隧道單管道行車 (2002年)</option>
+                <option value="|DEAD SLOW!||極慢">青嶼幹線 - 極慢 (2002年)</option>
                 <option value="CHATHAM ROAD SOUTH|STH BOUND DIVERSION|ON 8 APR (SUNDAY)|週日凌晨漆咸道改道">青嶼幹線 - 週日凌晨漆咸道改道(no picto)</option>
                 <option value="CHEUNG TSING TUNNEL|INTERMITTENTLY CLOSED||長青隧道 間歇性封閉">青嶼幹線 - 長青隧道 間歇性封閉</option>
                 <option value="DIVERSION AHEAD|KEEP LEFT EXCEPT CARS||改道靠左 細車除外">青嶼幹線 - 改道靠左 細車除外 (左斜 picto, 強風中線封閉)</option>
@@ -365,6 +374,9 @@
                 <option value="SLOW TRAFFIC IN TUNNEL|PROCEED WITH CAUTION||隧道行車緩慢 小心駕駛">香港仔隧道 - 隧道行車緩慢 小心駕駛(無picto)</option>
                 <option value="TRAFFIC CONGESTION AT|TUNNEL EXIT||隧道出口一帶交通擠塞">香港仔隧道 - 隧道出口一帶交通擠塞(無picto)</option>
                 <option value="WANCHAI EXIT CONGESTED|VEH. QUEUE ON LEFT LANE||灣仔出口擠塞 慢線有車龍">香港仔隧道 - 灣仔出口擠塞 慢線有車龍(無picto)</option>
+                <option value="WAN CHAI DIRECTION |CONGESTED||香港仔隧道往灣仔方向擠塞">香港仔隧道 - 香港仔隧道往灣仔方向擠塞 (2002年)</option>
+                <option value="KOWLOON DIRECTION|CONGESTED||香港仔隧道往九龍方向擠塞">香港仔隧道 - 香港仔隧道往九龍方向擠塞 (2002年)</option>
+                <option value="ROADWORKS ON TUNNEL TOLL PLAZA|LEFTSIDE LANE||隧道收費廣場左線路面維修">香港仔隧道 - 隧道收費廣場左線路面維修 (2002年)</option>
                 <option value="TUNNEL EXIT ROAD WORKS|DRIVE WITH CARE||隧道出口工程小心駕駛">啟德隧道 - 隧道出口工程小心駕駛(無picto)</option>
                 <option value="HIGH WIND|MANAGEMENT ON|HKZB-HKLR|港珠澳大橋實施强風管制">港珠澳香港連接路 - 港珠澳大橋實施強風管制</option>
                 <option value="HONG KONG PORT|CLOSED|DIVERT|香港口岸封閉，請改道">港珠澳香港連接路 - 香港口岸封閉，請改道</option>
@@ -376,8 +388,9 @@
                 <option value="Kln bound tunnel tube|slow lane closed||往九龍管道慢線封閉">獅子山隧道 - 往九龍管道慢線封閉</option>
                 <option value="LION ROCK TUNNEL|ONE-TUBE-TWO-WAY||獅隧單管雙程行車">獅子山隧道 - 獅隧單管雙程行車(無picto) 2012</option>
                 <option value="MULTI-ZONE ROAD ARE BLO|PLEASE DRIVE CAREFULLY||多區道路受阻">獅子山隧道 - 多區道路受阻(無picto) 2019</option>
-                <option value="WELCOME TO|CENTRAL KOWLOON BYPASS|(YAU MA TEI SECTION)|歡迎蒞臨中九龍繞道(油麻地段)">中九龍 - 歡迎蒞臨中九龍繞道(油麻地段) (Hwy logo) 2025</option>
-                <option value="2025 Legislative Council|General Election|Let’s Vote Together|2025立法會換屆選舉 齊投票">中九龍 - 立法會換屆選舉 齊投票 (Hwy logo) 2025</option>
+                <option value="WELCOME TO|CENTRAL KOWLOON BYPASS|(YAU MA TEI SECTION)|歡迎蒞臨中九龍繞道(油麻地段)">中九龍繞道 - 歡迎蒞臨中九龍繞道(油麻地段) (Hwy logo) 2025</option>
+                <option value="2025 Legislative Council|General Election|Let’s Vote Together|2025立法會換屆選舉 齊投票">中九龍繞道 - 立法會換屆選舉 齊投票 (Hwy logo) 2025</option>
+                <option value="CENTRAL KOWLOON|BYPASS|NOW OPEN|中九龍繞道現已通車">中九龍繞道 - 中九龍繞道現已通車(無picto)</option>
             </select>
         </div>
         <button onclick="applyMessage()">選用文字</button>
