@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Go！道路可變訊息控制器！v1.34</title>
+    <title>Go！道路可變訊息控制器！v1.35</title>
     <style>
         @font-face {
             font-family: 'VCR_OSD_MONO';
@@ -307,6 +307,7 @@
                 <option value="ZERO ACCIDENTS|ON THE ROAD|HONG KONG'S GOAL|路上零意外 香港人人愛">4 一般訊息 - 路上零意外 香港人人愛</option>
                 <option value="NO SPEEDING|||切勿超速！">4 一般訊息 - 切勿超速！</option>
                 <option value="WAIT FOR HELP AT A SAFE|PLACE WHEN BREAKDOWN||壞車時在安全地方等候救援">4 一般訊息 - 壞車時在安全地方等候救援</option>
+                <option value="WATCH OUT PEDESTRIANS|NO SPEEDING||小心行人 切勿超速">4 一般訊息 - 小心行人 切勿超速</option>
                 <option value="BYPASS W/B TO WANCHAI (N)|RD WORKS IN PROGRESS||繞道西行往灣北 工程中">中環灣仔繞道 - 繞道西行往灣北 工程中(無picto) </option>
                 <option value="BYPASS W/B TO WANCHAI (N)|RD WORKS DURING 10AM 4PM||繞道西行往灣北日間有工程">中環灣仔繞道 - 繞道西行往灣北日間有工程(無picto) </option>
                 <option value="CENTRAL-WAN CHAI BYPASS|WILL BE OPENED ON SATURDAY||中環灣仔繞道星期六開通">中環灣仔繞道 - 中環灣仔繞道星期六開通(無picto) 2019</option>
@@ -328,12 +329,13 @@
                 <option value="SPECIAL TRAFFIC|ARRANGEMENT AT|LAM TSUEN|新春林村有特別交通安排">吐露港粉嶺公路 - 新春林村有特別交通安排 2026</option>
                 <option value="Community Chest|Route 8|Walk for Millions|公益金八號幹線百萬行">青沙管制區 - 公益金八號幹線百萬行2008</option>
                 <option value="EAGLE'S NEST TUNNEL |SINGLE TUBE|TRAFFIC|尖山隧道 單管道行車">青沙管制區 - 尖山隧道 單管道行車(單管雙程picto)</option>
+                <option value="SHA TIN HEIGHTS TUNNEL|SINGLE TUBE|TRAFFIC|沙田嶺隧道 單管道行車">青沙管制區 - 沙田嶺隧道 單管道行車</option>
+                <option value="TAI WAI TUNNEL|SINGLE TUBE|TRAFFIC|大圍隧道 單管道行車">青沙管制區 - 大圍隧道 單管道行車</option>
+                <option value="STONECUTTERS|BRIDGE|CLOSED|昂船洲大橋 封閉">青沙管制區 - 昂船洲大橋 封閉</option>
                 <option value="MARATHON|WEST KOWLOON HIGHWAY|SOUTH BOUND IS CLOSED|西九龍公路南行因馬拉松封閉">青沙管制區 - 西九龍公路南行因馬拉松封閉(無picto) 2024</option>
                 <option value="ROAD CLOSURE IN|SHAM SHUI PO DISTRICT||深水土步區封路">青沙管制區 - 深水土步區封路(無picto) 2019</option>
-                <option value="SHA TIN HEIGHTS TUNNEL|SINGLE TUBE|TRAFFIC|沙田嶺隧道 單管道行車">青沙管制區 - 沙田嶺隧道 單管道行車</option>
-                <option value="STONECUTTERS|BRIDGE|CLOSED|昂船洲大橋 封閉">青沙管制區 - 昂船洲大橋 封閉</option>
                 <option value="Tai Po Road to Sha Tin|Traffic Congestion||大埔道往沙田交通擠塞">青沙管制區 - 大埔道往沙田交通擠塞2019</option>
-                <option value="TAI WAI TUNNEL|SINGLE TUBE|TRAFFIC|大圍隧道 單管道行車">青沙管制區 - 大圍隧道 單管道行車</option>
+                <option value="EAGLE'S NEST TUNNEL &|WEST KLN HIGHWAY E/B CLOSURE|FOR CYCLOTHON ON 30/11 SUN|單車節封尖山隧道西九公路東行">青沙管制區 - 單車節封尖山隧道西九公路東行 (2025年)</option>
                 <option value="|TO LANTAU ISLAND |PAY ON RETURN TRIP|往大嶼山回程繳費">青嶼幹線 - 往大嶼山回程繳費 (2002年)</option>
                 <option value="|TO LANTAU |PAY ON RETURN TRIP|往大嶼山 回程繳費">青嶼幹線 - 往大嶼山 回程繳費 (2002年)</option>
                 <option value="|TING KAU BRIDGE|CONGESTION|汀九橋擠塞">青嶼幹線 - 汀九橋擠塞 (2002年)</option>
@@ -360,19 +362,22 @@
                 <option value="TSING KWAI HIGHWAY K/B|SPEED LIMIT 50KM/H||青葵公路限速五十">青嶼幹線 - 青葵公路限速五十(80 picto)</option>
                 <option value="TSING MA BRIDGE UPPER DECK|& TING KAU BRIDGE HIGH|SIDED VEHICLE PROHIBITED|青馬上層及汀九橋禁高身車">青嶼幹線 - 青馬上層及汀九橋禁高身車(白! picto)</option>
                 <option value="ACCESS TO T.K. BRIDGE|LANE CLOSED||往汀九橋行車線封閉">青嶼幹線 - 往汀九橋行車線封閉</option>
-                <option value="WEST KLN HIGHWAY YAU MA TEI|EXIT CLOSED ON 3 AUG||8月3封西九公路油麻地出口">青嶼幹線 - 8月3封西九公路油麻地出口</option>
-                <option value="WEST KLN HIGHWAY|YAU MA TEI EXIT CLOSED||西九油麻地出口已封">青嶼幹線 - 西九油麻地出口已封</option>
-                <option value="NEW LANE AT WHC HK EXIT|COMMISSIONED||西隧港島出口新行車線已啟用">青嶼幹線 - 西隧港島出口新行車線已啟用</option>
+                <option value="WEST KLN HIGHWAY YAU MA TEI|EXIT CLOSED ON 3 AUG||8月3封西九公路油麻地出口">青嶼幹線 - 8月3封西九公路油麻地出口 (2025年)</option>
+                <option value="WEST KLN HIGHWAY|YAU MA TEI EXIT CLOSED||西九油麻地出口已封">青嶼幹線 - 西九油麻地出口已封(2025年)</option>
+                <option value="NEW LANE AT WHC HK EXIT|COMMISSIONED||西隧港島出口新行車線已啟用">青嶼幹線 - 西隧港島出口新行車線已啟用(2025年)</option>
+                <option value="STRONG WIND ON TSING MA BRIDGE|AND TING KAU BRIDGE|DRIVE CAREFULLY|青馬橋及汀九橋強風小心駕駛">青嶼幹線 - 青馬橋及汀九橋強風小心駕駛</option>
                 <option value="Power Supply Test|In Progress|At S. M. Tunnels|城門隧道電力測試">城門隧道 - 城門隧道電力測試</option>
-                <option value="SHING MUN TUNNEL|IMPLEMENT HKETOLL|ON SUN. 05:00AM|城隧周日早上實施易通行">城門隧道 - 城隧周日早上實施易通行 2023</option>
-                <option value="ISLAND EASTERN CORRIDOR|EASTBOUND CLOSED||街馬－東區走廊東行封閉">紅隧 - 街馬－東區走廊東行封閉2024</option>
+                <option value="SHING MUN TUNNEL|IMPLEMENT HKETOLL|ON SUN. 05:00AM|城隧周日早上實施易通行">城門隧道 - 城隧周日早上實施易通行(2023年)</option>
+                <option value="CROSS HARBOUR TUNNEL|SINGLE TUBE TWO-WAY||海底隧道單管雙程行車">紅隧 - 海底隧道單管雙程行車</option>
+                <option value="ISLAND EASTERN CORRIDOR|EASTBOUND CLOSED||街馬－東區走廊東行封閉">紅隧 - 街馬－東區走廊東行封閉 (2024年)</option>
                 <option value="NIGHT HORSERACE|AT HAPPY VALLEY TONIGHT||跑馬地今晚有夜馬賽事">紅隧 - 跑馬地今晚有夜馬賽事</option>
-                <option value="ROADS IN CAUSEWAY BAY |CENTRAL BLOCKED||銅鑼灣中區一帶道路受阻">紅隧 - 銅鑼灣中區一帶道路受阻2019</option>
+                <option value="ROADS IN CAUSEWAY BAY |CENTRAL BLOCKED||銅鑼灣中區一帶道路受阻">紅隧 - 銅鑼灣中區一帶道路受阻 (2019年)</option>
                 <option value="TRAFFIC CONGESTED AT|CHT BOTH SIDE BUS BAY||紅隧兩邊巴士站交通繁忙">紅隧 - 紅隧兩邊巴士站交通繁忙</option>
                 <option value="HOMANTIN EXIT|CONGESTION||何文田出口擠塞">紅隧 - 何文田出口擠塞（衛理道冧樹25/8/4）</option>
-                <option value="ROAD CLOSURE IN TSIM SHA|TSUI-CYCLOTHON 30/11 SUN||十一月三十單車節封尖沙咀">紅隧 - 十一月三十單車節封尖沙咀2025</option>
+                <option value="ROAD CLOSURE IN TSIM SHA|TSUI-CYCLOTHON 30/11 SUN||十一月三十單車節封尖沙咀">紅隧 - 十一月三十單車節封尖沙咀 (2025年)</option>
+                <option value="MARATHON NATHAN ROAD &|ARGYLE STREET CLOSED||馬拉松封彌敦道及亞皆老街">紅隧 - 海底隧道單管雙程行車 (2026年)</option>
                 <option value="ABREDEEN TUNNEL|IMPLEMENTED HKETOLL||香隧已實施易通行">香港仔隧道 - 香隧已實施易通行</option>
-                <option value="ABT IMPLEMENTS|HKETOLL ON SUN 5AM||香隧周日早上實施易通行">香港仔隧道 - 香隧周日早上實施易通行2023</option>
+                <option value="ABT IMPLEMENTS|HKETOLL ON SUN 5AM||香隧周日早上實施易通行">香港仔隧道 - 香隧周日早上實施易通行 (2023年)</option>
                 <option value="ABT WILL BE CLOSED|AT 0400 - 0500||香隧即將臨時封閉">香港仔隧道 - 香隧即將臨時封閉2023</option>
                 <option value="SLOW TRAFFIC IN TUNNEL|PROCEED WITH CAUTION||隧道行車緩慢 小心駕駛">香港仔隧道 - 隧道行車緩慢 小心駕駛(無picto)</option>
                 <option value="TRAFFIC CONGESTION AT|TUNNEL EXIT||隧道出口一帶交通擠塞">香港仔隧道 - 隧道出口一帶交通擠塞(無picto)</option>
